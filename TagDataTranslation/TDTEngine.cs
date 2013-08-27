@@ -273,7 +273,7 @@ namespace FOSSTRAK.TDT
                         where ((!String.IsNullOrEmpty(option.Item2.prefixMatch)) && (epcIdentifier.StartsWith(option.Item2.prefixMatch))) &&
                               ((!tagLength.HasValue) || (int.Parse(option.Item1.tagLength) == tagLength.Value)) &
                               (new Regex(String.Format(c_REGEXLINEFORMATTER, option.Item3.pattern)).Match(epcIdentifier).Success) &
-                              (((option.Item2.type != LevelTypeList.BINARY) & (option.Item2.type != LevelTypeList.PURE_IDENTITY) & (option.Item2.type != LevelTypeList.TAG_ENCODING)) &
+                              (((option.Item2.type != LevelTypeList.PURE_IDENTITY) & (option.Item2.type != LevelTypeList.TAG_ENCODING)) &
                                 (option.Item3.optionKey == GetInputParameterValue(option.Item1.optionKey, paramterList)))
                         select option;
 
@@ -541,7 +541,9 @@ namespace FOSSTRAK.TDT
                 }
 
                 // add the extracted, validated & formated token to the return array
-                tokens.Add(f.name, token);
+                if(!tokens.ContainsKey(f.name)){
+                  tokens.Add(f.name, token);
+                }
             }
         }
 
@@ -797,8 +799,7 @@ namespace FOSSTRAK.TDT
             }
             else
             {
-                long dec = long.Parse(binary);
-                return dec.ToString();
+                return Convert.ToInt64(binary,2).ToString();
             }
         }
 
